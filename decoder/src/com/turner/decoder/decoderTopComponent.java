@@ -114,7 +114,7 @@ public final class decoderTopComponent extends TopComponent {
         byte[] DTMFChar = new byte[8];
     }
     
-    public class segmentationDescriptor {
+    public static class segmentationDescriptor {
         int spliceDescriptorTag;
         int descriptorLength;
         int identifier;
@@ -130,6 +130,7 @@ public final class decoderTopComponent extends TopComponent {
         int deviceRestriction;
         int reserved2;
         long segmentationDuration;
+        long turnerIdentifier;
         int segmentationUPIDtype;
         int segmentationUPIDlength;
         int segmentationTypeID;
@@ -137,7 +138,8 @@ public final class decoderTopComponent extends TopComponent {
         int segmentsExpected;
     }
     
-    
+    public static segmentationDescriptor[] seg = new segmentationDescriptor[10];
+        
     public decoderTopComponent() {
         initComponents();
         setName(Bundle.CTL_decoderTopComponent());
@@ -190,10 +192,10 @@ public final class decoderTopComponent extends TopComponent {
                     .addComponent(convert64)
                     .addComponent(ConvertHex))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(base64in, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(base64in, javax.swing.GroupLayout.DEFAULT_SIZE, 777, Short.MAX_VALUE)
                     .addComponent(hexin))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -234,9 +236,9 @@ public final class decoderTopComponent extends TopComponent {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -264,8 +266,12 @@ public final class decoderTopComponent extends TopComponent {
         long l3;
         long l4;
         long l5;
-        int bufptr = 0;
-        int desptr = 0;
+        long l6;
+        long l7;
+        long l8;
+        int bufptr;
+        int desptr;
+        int segptr = 0;
         
         String stemp = "";
         String ot = "";
@@ -463,7 +469,7 @@ public final class decoderTopComponent extends TopComponent {
                 // Unknown command, oops
                 break;
         }
-        
+ 
         if (spliceInfoSection.spliceCommandLength != 0x0fff) { // legacy check
             if (bufptr != (spliceInfoSection.spliceCommandLength + 14)) {
                 ot += "ERROR decoded command length " + bufptr + " not equal to specified command length " + spliceInfoSection.spliceCommandLength + "\n";
@@ -472,61 +478,281 @@ public final class decoderTopComponent extends TopComponent {
             }
         }
 
-        
+
         i1 = b64[bufptr] & 0x00ff;
         bufptr++;
         i2 = b64[bufptr] & 0x00ff;
         bufptr++;
         spliceInfoSection.descriptorLoopLength = (i1 << 8) + i2;
         ot += "Descriptor Loop Length = " + spliceInfoSection.descriptorLoopLength + "\n";
-        
+
         desptr = bufptr;
-  
+
         if (spliceInfoSection.descriptorLoopLength > 0) {
-            int tag = b64[bufptr] & 0x00ff;
-            bufptr++;
-            int len = b64[bufptr] & 0x00ff;
-            bufptr++;
-            l1 = b64[bufptr] & 0x00ff;
-            bufptr++;
-            l2 = b64[bufptr] & 0x00ff;
-            bufptr++;
-            l3 = b64[bufptr] & 0x00ff;
-            bufptr++;
-            l4 = b64[bufptr] & 0x00ff;
-            bufptr++;
-            int identifier = (int) (((l1 << 24) + (l2 << 16) + (l3 << 8) + l4) & 0x00ffffffff);
-            if (identifier == 0x43554549) {
-                switch (tag) {
-                    case 0:
-                        ot += "Avail Descriptor -\n";
-                        break;
-                    case 1:
-                        ot += "DTMF Descriptor -\n";
-                        break;
-                    case 2:
-                        ot += "Segmentation Descriptor -\n";
-                        break;
+            while ((bufptr - desptr) < spliceInfoSection.descriptorLoopLength) {
+                int tag = b64[bufptr] & 0x00ff;
+                bufptr++;
+                int len = b64[bufptr] & 0x00ff;
+                bufptr++;
+                l1 = b64[bufptr] & 0x00ff;
+                bufptr++;
+                l2 = b64[bufptr] & 0x00ff;
+                bufptr++;
+                l3 = b64[bufptr] & 0x00ff;
+                bufptr++;
+                l4 = b64[bufptr] & 0x00ff;
+                bufptr++;
+                int identifier = (int) ((l1 << 24) + (l2 << 16) + (l3 << 8) + l4);
+                if (identifier == 0x43554549) {
+                    switch (tag) {
+                        case 0:
+                            ot += "Avail Descriptor -\n";
+                            l1 = b64[bufptr] & 0x00ff;
+                            bufptr++;
+                            l2 = b64[bufptr] & 0x00ff;
+                            bufptr++;
+                            l3 = b64[bufptr] & 0x00ff;
+                            bufptr++;
+                            l4 = b64[bufptr] & 0x00ff;
+                            bufptr++;
+                            int availDesc = (int) (((l1 << 24) + (l2 << 16) + (l3 << 8) + l4) & 0x00ffffffff);
+                            ot += String.format("Avail Descriptor = 0x%08x\n", availDesc);
+                            break;
+                        case 1:
+                            ot += "DTMF Descriptor -\n";
+                            bufptr += (len - 4);
+                            break;
+                        case 2:
+                            ot += "Segmentation Descriptor -\n";
+                            seg[segptr] = new segmentationDescriptor();
+                            l1 = b64[bufptr] & 0x00ff;
+                            bufptr++;
+                            l2 = b64[bufptr] & 0x00ff;
+                            bufptr++;
+                            l3 = b64[bufptr] & 0x00ff;
+                            bufptr++;
+                            l4 = b64[bufptr] & 0x00ff;
+                            bufptr++;
+                            seg[segptr].segmentationEventID = (int) (((l1 << 24) + (l2 << 16) + (l3 << 8) + l4) & 0x00ffffffff);
+                            ot += String.format("Segmentation Event ID = 0x%08x\n", seg[segptr].segmentationEventID);
+                            seg[segptr].segmentationEventCancelIndicator = (b64[bufptr] & 0x080) >> 7;
+                            bufptr++;
+                            if (seg[segptr].segmentationEventCancelIndicator == 0) {
+                                ot += "Segmentation Event Cancel Indicator NOT set\n";
+                                seg[segptr].programSegmentationFlag = (b64[bufptr] & 0x080) >> 7;
+                                seg[segptr].segmentationDurationFlag = (b64[bufptr] & 0x040) >> 6;
+                                seg[segptr].deliveryNotRestricted = (b64[bufptr] & 0x020) >> 5;
+                                ot += "Delivery Not Restricted flag = " + seg[segptr].deliveryNotRestricted + "\n";
+                                if (seg[segptr].deliveryNotRestricted == 0) {
+                                    seg[segptr].webDeliveryAllowedFlag = (b64[bufptr] & 0x010) >> 4;
+                                    ot += "Web Delivery Allowed flag = " + seg[segptr].webDeliveryAllowedFlag + "\n";
+                                    seg[segptr].noRegionalBlackoutFlag = (b64[bufptr] & 0x008) >> 3;
+                                    ot += "No Regional Blackout flag = " + seg[segptr].noRegionalBlackoutFlag + "\n";
+                                    seg[segptr].archiveAllowed = (b64[bufptr] & 0x004) >> 2;
+                                    ot += "Archive Allowed flag = " + seg[segptr].archiveAllowed + "\n";
+                                    seg[segptr].deviceRestriction = (b64[bufptr] & 0x003);
+                                    ot += "Device Restrictions = " + seg[segptr].deviceRestriction + "\n";
+                                }
+                                bufptr++;
+                                if (seg[segptr].programSegmentationFlag == 0) {
+                                    ot += "Component segmention NOT IMPLEMENTED\n";
+                                } else {
+                                    ot += "Program Segmentation flag SET\n";
+                                }
+                                if (seg[segptr].segmentationDurationFlag == 1) {
+                                    l1 = b64[bufptr] & 0x0ff;
+                                    bufptr++;
+                                    l2 = b64[bufptr] & 0x00ff;
+                                    bufptr++;
+                                    l3 = b64[bufptr] & 0x00ff;
+                                    bufptr++;
+                                    l4 = b64[bufptr] & 0x00ff;
+                                    bufptr++;
+                                    l5 = b64[bufptr] & 0x00ff;
+                                    bufptr++;
+                                    seg[segptr].segmentationDuration = (l1 << 32) + (l2 << 24) + (l3 << 16) + (l4 << 8) + l5;
+                                    ot += String.format("Segmentation Duration = 0x%010x\n", seg[segptr].segmentationDuration);
+                                }
+                                seg[segptr].segmentationUPIDtype = b64[bufptr] & 0x00ff;
+                                bufptr++;
+                                seg[segptr].segmentationUPIDlength = b64[bufptr] & 0x00ff;
+                                bufptr++;
+                                switch (seg[segptr].segmentationUPIDtype) {
+                                    case 0x00:
+                                        ot += "UPID Type = Not Used\n";
+                                        break;
+                                    case 0x01:
+                                        ot += "UPID Type = User Defined (Deprecated) length =" + seg[segptr].segmentationUPIDlength + "\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                    case 0x02:
+                                        ot += "UPID Type = ISCII (deprecated)\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                    case 0x03:
+                                        ot += "UPID Type = Ad-ID\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                    case 0x04:
+                                        ot += "UPID Type = UMID SMPTE 330M\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                    case 0x05:
+                                        ot += "UPID Type = ISAN (Deprecated)\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                    case 0x06:
+                                        ot += "UPID Type = ISAN\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                    case 0x07:
+                                        ot += "UPID Type = Tribune ID\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                    case 0x08:
+                                        ot += "UPID Type = Turner Identifier\n";
+                                        l1 = b64[bufptr] & 0x0ff;
+                                        bufptr++;
+                                        l2 = b64[bufptr] & 0x00ff;
+                                        bufptr++;
+                                        l3 = b64[bufptr] & 0x00ff;
+                                        bufptr++;
+                                        l4 = b64[bufptr] & 0x00ff;
+                                        bufptr++;
+                                        l5 = b64[bufptr] & 0x00ff;
+                                        bufptr++;
+                                        l6 = b64[bufptr] & 0x00ff;
+                                        bufptr++;
+                                        l7 = b64[bufptr] & 0x00ff;
+                                        bufptr++;
+                                        l8 = b64[bufptr] & 0x00ff;
+                                        bufptr++;
+                                        seg[segptr].turnerIdentifier = (l1 << 56) + (l2 << 48) + (l3 << 40) + (l4 << 32) + (l5 << 24) + (l6 << 16) + (l7 << 8) + l8;
+                                        ot += String.format("Turner Identifier = 0x%016x\n", seg[segptr].turnerIdentifier);
+                                        break;
+                                    case 0x09:
+                                        ot += "UPID Type = ADI\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                    case 0x0A:
+                                        ot += "UPID Type = EIDR\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                    case 0x0B:
+                                        ot += "UPID Type = ATSC Content Identifier\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                    case 0x0C:
+                                        ot += "UPID Type = Managed Private UPID\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                    case 0x0D:
+                                        ot += "UPID Type = Multiple UPID\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                }
+                                seg[segptr].segmentationTypeID = b64[bufptr] & 0x00ff;
+                                bufptr++;
+                                switch (seg[segptr].segmentationTypeID) {
+                                    case 0x00:
+                                        ot += "Type = Not Indicated\n";
+                                        break;
+                                    case 0x01:
+                                        ot += "Type = Content Identification\n";
+                                        break;
+                                    case 0x10:
+                                        ot += "Type = Program Start\n";
+                                        break;
+                                    case 0x11:
+                                        ot += "Type = Program End\n";
+                                        break;
+                                    case 0x12:
+                                        ot += "Type = Program Early Termination\n";
+                                        break;
+                                    case 0x13:
+                                        ot += "Type = Program Breakaway\n";
+                                        break;
+                                    case 0x14:
+                                        ot += "Type = Program Resumption\n";
+                                        break;
+                                    case 0x15:
+                                        ot += "Type = Program Runover Planned\n";
+                                        break;
+                                    case 0x16:
+                                        ot += "Type = Program Runover Unplanned\n";
+                                        break;
+                                    case 0x17:
+                                        ot += "Type = Program Overlap Start\n";
+                                        break;
+                                    case 0x20:
+                                        ot += "Type = Chapter Start\n";
+                                        break;
+                                    case 0x21:
+                                        ot += "Type = Chapter End\n";
+                                        break;
+                                    case 0x30:
+                                        ot += "Type = Provider Advertisement Start\n";
+                                        break;
+                                    case 0x31:
+                                        ot += "Type = Provider Advertisement End\n";
+                                        break;
+                                    case 0x32:
+                                        ot += "Type = Distributor Advertisement Start\n";
+                                        break;
+                                    case 0x33:
+                                        ot += "Type = Distributor Advertisement End\n";
+                                        break;
+                                    case 0x34:
+                                        ot += "Type = Placement Opportunity Start\n";
+                                        break;
+                                    case 0x35:
+                                        ot += "Type = Placement Opportunity End\n";
+                                        break;
+                                    case 0x40:
+                                        ot += "Type = Unscheduled Event Start\n";
+                                        break;
+                                    case 0x41:
+                                        ot += "Type = Unscheduled Event End\n";
+                                        break;
+                                    case 0x50:
+                                        ot += "Type = Network Start\n";
+                                        break;
+                                    case 0x51:
+                                        ot += "Type = Network End\n";
+                                        break;
+
+                                }
+                                seg[segptr].segmentNum = b64[bufptr] & 0x00ff;
+                                bufptr++;
+                                seg[segptr].segmentsExpected = b64[bufptr] & 0x00ff;
+                                bufptr++;
+                                ot += "Segment num = " + seg[segptr].segmentNum + " Segments Expected = " + seg[segptr].segmentsExpected + "\n";
+                                segptr++;
+                            } else {
+                                ot += "Segmentation Event Cancel Indicator SET\n";
+                            }
+
+
+                            break;
+                    }
+                } else {
+                    ot += String.format("Private Descriptor tag=%d Length=%didentifier = %0x08x\n", tag, len, identifier);
+                    bufptr += len - 4;
                 }
-            } else {
-                ot += String.format("Private Descriptor tag=%d Length=%didentifier = %0x08x\n", tag, len, identifier);
-                bufptr += len - 4;
             }
-
-
-
         }
-        
+
         if (bufptr != (spliceInfoSection.descriptorLoopLength + desptr)) {
-                ot += "ERROR decoded descriptor length " + bufptr + " not equal to specified command length " + spliceInfoSection.spliceCommandLength + "\n";            
-                bufptr = desptr + spliceInfoSection.descriptorLoopLength;
+            int dlen = bufptr - desptr;
+            ot += "ERROR decoded descriptor length " + dlen + " not equal to specified descriptor length " + spliceInfoSection.descriptorLoopLength + "\n";
+            bufptr = desptr + spliceInfoSection.descriptorLoopLength;
         }
-        
+
         if (spliceInfoSection.encryptedPacket != 0) {
-        spliceInfoSection.alignmentStuffing = 0;
-        spliceInfoSection.eCRC32 = 0;
+            spliceInfoSection.alignmentStuffing = 0;
+            spliceInfoSection.eCRC32 = 0;
         }
-        
+
         l1 = b64[bufptr] & 0x00ff;
         bufptr++;
         l2 = b64[bufptr] & 0x00ff;
@@ -535,14 +761,13 @@ public final class decoderTopComponent extends TopComponent {
         bufptr++;
         l4 = b64[bufptr] & 0x00ff;
         bufptr++;
-        spliceInfoSection.CRC32 = (int)(((l1<<24) + (l2<<16) + (l3<<8) + l4) & 0x00ffffffff);
+        spliceInfoSection.CRC32 = (int) (((l1 << 24) + (l2 << 16) + (l3 << 8) + l4) & 0x00ffffffff);
         ot += String.format("CRC32 = 0x%08x\n", spliceInfoSection.CRC32);
- 
-        outText.setText(ot);
-        
-        
-    }//GEN-LAST:event_convert64ActionPerformed
 
+        outText.setText(ot);
+
+
+    }//GEN-LAST:event_convert64ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton ConvertHex;
     private javax.swing.JTextField base64in;
@@ -553,6 +778,7 @@ public final class decoderTopComponent extends TopComponent {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextPane outText;
     // End of variables declaration//GEN-END:variables
+
     @Override
     public void componentOpened() {
         // TODO add custom code on component opening
