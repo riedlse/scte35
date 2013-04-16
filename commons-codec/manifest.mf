@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: com.turner.scte35.common.codec
+OpenIDE-Module-Localizing-Bundle: com/turner/scte35/common/codec/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

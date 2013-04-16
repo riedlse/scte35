@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="com.turner.decoder">
+    <module_version install_time="1366059660111" last="true" origin="installer" specification_version="1.0">
+        <file crc="2558068045" name="config/Modules/com-turner-decoder.xml"/>
+        <file crc="3182409012" name="modules/com-turner-decoder.jar"/>
+    </module_version>
+</module>

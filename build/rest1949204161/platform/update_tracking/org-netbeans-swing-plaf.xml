@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.netbeans.swing.plaf">
+    <module_version install_time="1360796023160" last="true" origin="installer" specification_version="1.30.1">
+        <file crc="4198966476" name="config/Modules/org-netbeans-swing-plaf.xml"/>
+        <file crc="806116692" name="modules/locale/org-netbeans-swing-plaf_ja.jar"/>
+        <file crc="3522279272" name="modules/locale/org-netbeans-swing-plaf_pt_BR.jar"/>
+        <file crc="80971250" name="modules/locale/org-netbeans-swing-plaf_ru.jar"/>
+        <file crc="3983141532" name="modules/locale/org-netbeans-swing-plaf_zh_CN.jar"/>
+        <file crc="1278183461" name="modules/org-netbeans-swing-plaf.jar"/>
+    </module_version>
+</module>

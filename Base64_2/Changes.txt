@@ -1,0 +1,9 @@
+Changelog 2.1 > 2.2
+
+* Added a "fast" decode method that is a little more than two times faster
+  than the normal one but has some moderate restriction on input.
+  
+* Normal decode now handles negative bytes and just disregard them as 
+  specified in RFC 2045.
+  
+* Some minor enhancements

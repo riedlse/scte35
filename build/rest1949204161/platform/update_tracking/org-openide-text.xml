@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<module codename="org.openide.text">
+    <module_version install_time="1360796585701" last="false" origin="installer" specification_version="6.54.1">
+        <file crc="2441864466" name="config/ModuleAutoDeps/org-openide-text.xml"/>
+        <file crc="1795978028" name="config/Modules/org-openide-text.xml"/>
+        <file crc="1025261308" name="modules/locale/org-openide-text_ja.jar"/>
+        <file crc="4065592975" name="modules/locale/org-openide-text_pt_BR.jar"/>
+        <file crc="1250418080" name="modules/locale/org-openide-text_ru.jar"/>
+        <file crc="2719787521" name="modules/locale/org-openide-text_zh_CN.jar"/>
+        <file crc="3506066284" name="modules/org-openide-text.jar"/>
+    </module_version>
+    <module_version install_time="1365357626088" last="true" origin="NetBeans Distribution" specification_version="6.54.2">
+        <file crc="2441864466" name="config/ModuleAutoDeps/org-openide-text.xml"/>
+        <file crc="1795978028" name="config/Modules/org-openide-text.xml"/>
+        <file crc="3310922179" name="modules/locale/org-openide-text_ja.jar"/>
+        <file crc="2257475812" name="modules/locale/org-openide-text_pt_BR.jar"/>
+        <file crc="3040891086" name="modules/locale/org-openide-text_ru.jar"/>
+        <file crc="2575654515" name="modules/locale/org-openide-text_zh_CN.jar"/>
+        <file crc="3733871588" name="modules/org-openide-text.jar"/>
+    </module_version>
+</module>

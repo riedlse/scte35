@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.netbeans.core/2">
+    <module_version install_time="1360797038975" last="true" origin="installer" specification_version="3.37.1">
+        <file crc="1234898518" name="config/ModuleAutoDeps/org-netbeans-core.xml"/>
+        <file crc="2943625018" name="config/Modules/org-netbeans-core.xml"/>
+        <file crc="2601114686" name="modules/ext/nsProxyAutoConfig.js"/>
+        <file crc="931422600" name="modules/locale/org-netbeans-core_ja.jar"/>
+        <file crc="2438866558" name="modules/locale/org-netbeans-core_pt_BR.jar"/>
+        <file crc="420029243" name="modules/locale/org-netbeans-core_ru.jar"/>
+        <file crc="2713241830" name="modules/locale/org-netbeans-core_zh_CN.jar"/>
+        <file crc="285687244" name="modules/org-netbeans-core.jar"/>
+    </module_version>
+</module>

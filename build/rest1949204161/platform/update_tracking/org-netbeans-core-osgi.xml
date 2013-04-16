@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.netbeans.core.osgi">
+    <module_version install_time="1360796533776" last="true" origin="installer" specification_version="1.12.1">
+        <file crc="4106410406" name="config/Modules/org-netbeans-core-osgi.xml"/>
+        <file crc="3599018285" name="modules/locale/org-netbeans-core-osgi_ja.jar"/>
+        <file crc="3536654549" name="modules/locale/org-netbeans-core-osgi_pt_BR.jar"/>
+        <file crc="4286142565" name="modules/locale/org-netbeans-core-osgi_ru.jar"/>
+        <file crc="1633262402" name="modules/locale/org-netbeans-core-osgi_zh_CN.jar"/>
+        <file crc="660142584" name="modules/org-netbeans-core-osgi.jar"/>
+    </module_version>
+</module>
