@@ -173,10 +173,6 @@ public final class decoderTopComponent extends TopComponent {
 
         ot += "Decoded length = " + b64.length + "\n";
 
-        for (int i = 0; i < b64.length; i++) {
-            stemp += String.format("%02X", b64[i]);
-        }
-        hexin.setText(stemp);
 
         spliceInfoSection.tableID = b64[0] & 0x00ff;
         if (spliceInfoSection.tableID != 0x0FC) {
@@ -400,7 +396,7 @@ public final class decoderTopComponent extends TopComponent {
                 if (identifier == 0x43554549) {
                     switch (tag) {
                         case 0:
-                            ot += "Avail Descriptor -\n";
+                            ot += "Avail Descriptor - Length=" + len + "\n";
                             l1 = b64[bufptr] & 0x00ff;
                             bufptr++;
                             l2 = b64[bufptr] & 0x00ff;
@@ -413,7 +409,7 @@ public final class decoderTopComponent extends TopComponent {
                             ot += String.format("Avail Descriptor = 0x%08x\n", availDesc);
                             break;
                         case 1:
-                            ot += "DTMF Descriptor -\n";
+                            ot += "DTMF Descriptor - Length=" + len + "\n";
                             double preroll = b64[bufptr] & 0x00ff;
                             preroll /= 10;
                             ot += "Preroll = " + preroll + "\n";
@@ -428,7 +424,7 @@ public final class decoderTopComponent extends TopComponent {
                             ot += "\n";
                             break;
                         case 2:
-                            ot += "Segmentation Descriptor -\n";
+                            ot += "Segmentation Descriptor - Length=" + len + "\n";
                             seg[segptr] = new segmentationDescriptor();
                             l1 = b64[bufptr] & 0x00ff;
                             bufptr++;
@@ -641,7 +637,7 @@ public final class decoderTopComponent extends TopComponent {
                             break;
                     }
                 } else {
-                    ot += String.format("Private Descriptor tag=%d Length=%didentifier = %0x08x\n", tag, len, identifier);
+                    ot += String.format("Private Descriptor tag=%d Length=%d identifier = 0x%08x\n", tag, len, identifier);
                     bufptr += len - 4;
                 }
             }
@@ -651,24 +647,25 @@ public final class decoderTopComponent extends TopComponent {
             int dlen = bufptr - desptr;
             ot += "ERROR decoded descriptor length " + dlen + " not equal to specified descriptor length " + spliceInfoSection.descriptorLoopLength + "\n";
             bufptr = desptr + spliceInfoSection.descriptorLoopLength;
+            ot += "SKIPPING REST OF THE COMMAND!!!!!!\n";
+        } else {
+
+            if (spliceInfoSection.encryptedPacket != 0) {
+                spliceInfoSection.alignmentStuffing = 0;
+                spliceInfoSection.eCRC32 = 0;
+            }
+
+            l1 = b64[bufptr] & 0x00ff;
+            bufptr++;
+            l2 = b64[bufptr] & 0x00ff;
+            bufptr++;
+            l3 = b64[bufptr] & 0x00ff;
+            bufptr++;
+            l4 = b64[bufptr] & 0x00ff;
+            bufptr++;
+            spliceInfoSection.CRC32 = (int) (((l1 << 24) + (l2 << 16) + (l3 << 8) + l4) & 0x00ffffffff);
+            ot += String.format("CRC32 = 0x%08x\n", spliceInfoSection.CRC32);
         }
-
-        if (spliceInfoSection.encryptedPacket != 0) {
-            spliceInfoSection.alignmentStuffing = 0;
-            spliceInfoSection.eCRC32 = 0;
-        }
-
-        l1 = b64[bufptr] & 0x00ff;
-        bufptr++;
-        l2 = b64[bufptr] & 0x00ff;
-        bufptr++;
-        l3 = b64[bufptr] & 0x00ff;
-        bufptr++;
-        l4 = b64[bufptr] & 0x00ff;
-        bufptr++;
-        spliceInfoSection.CRC32 = (int) (((l1 << 24) + (l2 << 16) + (l3 << 8) + l4) & 0x00ffffffff);
-        ot += String.format("CRC32 = 0x%08x\n", spliceInfoSection.CRC32);
-
         outText.setText(ot);
     }
 
@@ -790,11 +787,18 @@ public final class decoderTopComponent extends TopComponent {
 
     private void hexDecodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexDecodeActionPerformed
         b64 = DatatypeConverter.parseHexBinary(hexin.getText());
+        base64in.setText(Base64.encodeToString(b64, false));
         decode35();
     }//GEN-LAST:event_hexDecodeActionPerformed
 
     private void base64DecodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_base64DecodeActionPerformed
         b64 = Base64.decodeFast(base64in.getText());
+        String stemp = "";
+        for (int i = 0; i < b64.length; i++) {
+            stemp += String.format("%02X", b64[i]);
+        }
+        hexin.setText(stemp);
+
         decode35();
     }//GEN-LAST:event_base64DecodeActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
