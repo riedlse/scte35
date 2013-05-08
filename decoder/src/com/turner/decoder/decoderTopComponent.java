@@ -71,7 +71,7 @@ public final class decoderTopComponent extends TopComponent {
         public int reserved2;
     }
 
-    public class breakDuration {
+    public static class breakDuration {
 
         int autoReturn;
         int reserved1;
@@ -88,7 +88,7 @@ public final class decoderTopComponent extends TopComponent {
         public static spliceTime sisp = new spliceTime();
         public static int durationFlag;
         public static int spliceImmediateFlag;
-        public static breakDuration brdr;
+        public static breakDuration brdr = new breakDuration();
         public static int reserved2;
         public static int uniqueProgramID;
         public static int availNum;
@@ -274,11 +274,11 @@ public final class decoderTopComponent extends TopComponent {
                 spliceInsert.programSpliceFlag = (b64[bufptr] & 0x040) >> 6;
                 spliceInsert.durationFlag = (b64[bufptr] & 0x020) >> 5;
                 spliceInsert.spliceImmediateFlag = (b64[bufptr] & 0x010) >> 4;
-
+                bufptr++;
                 ot += "Flags OON=" + spliceInsert.outOfNetworkIndicator + " Prog=" + spliceInsert.programSpliceFlag
                         + " Duration=" + spliceInsert.durationFlag + " Immediate=" + spliceInsert.spliceImmediateFlag + "\n";
 
-                if ((spliceInsert.programSpliceFlag != 0) && (spliceInsert.spliceImmediateFlag != 0)) {
+                if ((spliceInsert.programSpliceFlag == 1) && (spliceInsert.spliceImmediateFlag == 0)) {
                     if ((b64[bufptr] & 0x080) != 0) {
                         // time specified
                         l1 = b64[bufptr] & 0x01;
@@ -312,7 +312,9 @@ public final class decoderTopComponent extends TopComponent {
                     l5 = b64[bufptr] & 0x00ff;
                     bufptr++;
                     spliceInsert.brdr.duration = (l1 << 32) + (l2 << 24) + (l3 << 16) + (l4 << 8) + l5;
-                    ot += String.format("break duration = 0x%09x\n", spliceInsert.brdr.duration);
+                    double bsecs = spliceInsert.brdr.duration;
+                    bsecs /= 90000.0;
+                    ot += String.format("break duration = 0x%09x = %f seconds\n", spliceInsert.brdr.duration, bsecs);
                 }
                 i1 = b64[bufptr] & 0x00ff;
                 bufptr++;
