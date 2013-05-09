@@ -169,8 +169,13 @@ public final class decoderTopComponent extends TopComponent {
         int segptr = 0;
 
         String stemp = "";
-        String ot = "";
+        String ot = "Hex=0x";
 
+        for (int i = 0; i < b64.length; i++) {
+            stemp += String.format("%02X", b64[i]);
+        }
+        ot += stemp + "\nBase64=" + Base64.encodeToString(b64, false) + "\n\n";       
+        
         ot += "Decoded length = " + b64.length + "\n";
 
 
@@ -487,15 +492,31 @@ public final class decoderTopComponent extends TopComponent {
                                         ot += "UPID Type = Not Used\n";
                                         break;
                                     case 0x01:
-                                        ot += "UPID Type = User Defined (Deprecated) length =" + seg[segptr].segmentationUPIDlength + "\n";
+                                        ot += "UPID Type = User Defined (Deprecated) length =" + seg[segptr].segmentationUPIDlength + "\nHex=0x";
+                                        for (int j=bufptr;j<(bufptr + seg[segptr].segmentationUPIDlength); j++) {
+                                            ot += String.format("%02X.", b64[j]);
+                                        }
+                                        ot += "\n";
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x02:
                                         ot += "UPID Type = ISCII (deprecated)\n";
+                                        String siTemp = "ISCII=";
+                                        for (int j=bufptr;j<(bufptr + seg[segptr].segmentationUPIDlength); j++) {
+                                            siTemp += (char)b64[j];
+                                        }
+                                        siTemp += "\n";
+                                        ot += siTemp;
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x03:
                                         ot += "UPID Type = Ad-ID\n";
+                                        String stTemp = "AdId=";
+                                        for (int j=bufptr;j<(bufptr + seg[segptr].segmentationUPIDlength); j++) {
+                                            stTemp += (char)b64[j];
+                                        }
+                                        stTemp += "\n";
+                                        ot += stTemp;
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x04:
@@ -552,7 +573,11 @@ public final class decoderTopComponent extends TopComponent {
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x0D:
-                                        ot += "UPID Type = Multiple UPID\n";
+                                        ot += "UPID Type = Multiple UPID\nHex=0x";
+                                        for (int j = bufptr; j < (bufptr + seg[segptr].segmentationUPIDlength); j++) {
+                                            ot += String.format("%02X.", b64[j]);
+                                        }
+                                        ot += "\n";
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                 }
@@ -742,6 +767,8 @@ public final class decoderTopComponent extends TopComponent {
                 .addContainerGap(8, Short.MAX_VALUE))
         );
 
+        outText.setFont(new java.awt.Font("Arial Narrow", 0, 8)); // NOI18N
+        outText.setPreferredSize(new java.awt.Dimension(256, 40));
         jScrollPane1.setViewportView(outText);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
