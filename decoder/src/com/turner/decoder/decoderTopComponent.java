@@ -489,7 +489,7 @@ public final class decoderTopComponent extends TopComponent {
                                 bufptr++;
                                 switch (seg[segptr].segmentationUPIDtype) {
                                     case 0x00:
-                                        ot += "UPID Type = Not Used\n";
+                                        ot += "UPID Type = Not Used length = " +  seg[segptr].segmentationUPIDlength + "\n";
                                         break;
                                     case 0x01:
                                         ot += "UPID Type = User Defined (Deprecated) length =" + seg[segptr].segmentationUPIDlength + "\nHex=0x";
@@ -500,7 +500,7 @@ public final class decoderTopComponent extends TopComponent {
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x02:
-                                        ot += "UPID Type = ISCII (deprecated)\n";
+                                        ot += "UPID Type = ISCII (deprecated)length = " +  seg[segptr].segmentationUPIDlength + "\n";
                                         String siTemp = "ISCII=";
                                         for (int j=bufptr;j<(bufptr + seg[segptr].segmentationUPIDlength); j++) {
                                             siTemp += (char)b64[j];
@@ -510,7 +510,7 @@ public final class decoderTopComponent extends TopComponent {
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x03:
-                                        ot += "UPID Type = Ad-ID\n";
+                                        ot += "UPID Type = Ad-IDlength = " +  seg[segptr].segmentationUPIDlength + "\n";
                                         String stTemp = "AdId=";
                                         for (int j=bufptr;j<(bufptr + seg[segptr].segmentationUPIDlength); j++) {
                                             stTemp += (char)b64[j];
@@ -520,23 +520,23 @@ public final class decoderTopComponent extends TopComponent {
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x04:
-                                        ot += "UPID Type = UMID SMPTE 330M\n";
+                                        ot += "UPID Type = UMID SMPTE 330M length = " +  seg[segptr].segmentationUPIDlength + "\n";
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x05:
-                                        ot += "UPID Type = ISAN (Deprecated)\n";
+                                        ot += "UPID Type = ISAN (Deprecated) length = " +  seg[segptr].segmentationUPIDlength + "\n";
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x06:
-                                        ot += "UPID Type = ISAN\n";
+                                        ot += "UPID Type = ISAN length = " +  seg[segptr].segmentationUPIDlength + "\n";
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x07:
-                                        ot += "UPID Type = Tribune ID\n";
+                                        ot += "UPID Type = Tribune ID length = " +  seg[segptr].segmentationUPIDlength + "\n";
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x08:
-                                        ot += "UPID Type = Turner Identifier\n";
+                                        ot += "UPID Type = Turner Identifier length = " +  seg[segptr].segmentationUPIDlength + "\n";
                                         l1 = b64[bufptr] & 0x0ff;
                                         bufptr++;
                                         l2 = b64[bufptr] & 0x00ff;
@@ -557,23 +557,31 @@ public final class decoderTopComponent extends TopComponent {
                                         ot += String.format("Turner Identifier = 0x%016x\n", seg[segptr].turnerIdentifier);
                                         break;
                                     case 0x09:
-                                        ot += "UPID Type = ADI\n";
+                                        ot += "UPID Type = ADI length = " +  seg[segptr].segmentationUPIDlength + "\n";
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x0A:
-                                        ot += "UPID Type = EIDR\n";
+                                        ot += "UPID Type = EIDR length = " +  seg[segptr].segmentationUPIDlength + "\n";
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x0B:
-                                        ot += "UPID Type = ATSC Content Identifier\n";
+                                        ot += "UPID Type = ATSC Content Identifier length = " +  seg[segptr].segmentationUPIDlength + "\n";
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x0C:
-                                        ot += "UPID Type = Managed Private UPID\n";
+                                        ot += "UPID Type = Managed Private UPID length = " +  seg[segptr].segmentationUPIDlength + "\n";
                                         bufptr += seg[segptr].segmentationUPIDlength;
                                         break;
                                     case 0x0D:
-                                        ot += "UPID Type = Multiple UPID\nHex=0x";
+                                        ot += "UPID Type = Multiple UPID length = " +  seg[segptr].segmentationUPIDlength + "\nHex=0x";
+                                        for (int j = bufptr; j < (bufptr + seg[segptr].segmentationUPIDlength); j++) {
+                                            ot += String.format("%02X.", b64[j]);
+                                        }
+                                        ot += "\n";
+                                        bufptr += seg[segptr].segmentationUPIDlength;
+                                        break;
+                                    default:
+                                        ot += "UPID Type = UNKNOWN length = " +  seg[segptr].segmentationUPIDlength + "\nHex=0x";
                                         for (int j = bufptr; j < (bufptr + seg[segptr].segmentationUPIDlength); j++) {
                                             ot += String.format("%02X.", b64[j]);
                                         }
@@ -650,7 +658,9 @@ public final class decoderTopComponent extends TopComponent {
                                     case 0x51:
                                         ot += "Type = Network End\n";
                                         break;
-
+                                    default:
+                                        ot += "Type = Unknown = " + seg[segptr].segmentationTypeID + "\n";
+                                        break;
                                 }
                                 seg[segptr].segmentNum = b64[bufptr] & 0x00ff;
                                 bufptr++;
