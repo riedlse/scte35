@@ -4,6 +4,9 @@
  */
 package com.turner.decoder;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -145,6 +148,8 @@ public final class decoderTopComponent extends TopComponent {
     }
     public static segmentationDescriptor[] seg = new segmentationDescriptor[10];
 
+    public String ot = "";
+    
     public decoderTopComponent() {
         initComponents();
         setName(Bundle.CTL_decoderTopComponent());
@@ -210,7 +215,7 @@ public final class decoderTopComponent extends TopComponent {
         int segptr = 0;
 
         String stemp = "";
-        String ot = "Hex=0x";
+        ot = "Hex=0x";
 
         for (int i = 0; i < b64.length; i++) {
             stemp += String.format("%02X", b64[i]);
@@ -715,7 +720,11 @@ public final class decoderTopComponent extends TopComponent {
                             break;
                     }
                 } else {
-                    ot += String.format("Private Descriptor tag=%d Length=%d identifier = 0x%08x\n", tag, len, identifier);
+                    ot += String.format("Private Descriptor tag=%d Length=%d identifier = 0x%08x  Value = 0x", tag, len, identifier);
+                    for (int j = bufptr; j < (bufptr + (len-4)); j++) {
+                        ot += String.format("%02X.", b64[j]);
+                    }
+                    ot += "\n";
                     bufptr += len - 4;
                 }
             }
@@ -761,6 +770,7 @@ public final class decoderTopComponent extends TopComponent {
         hexin = new javax.swing.JTextField();
         hexDecode = new javax.swing.JButton();
         base64Decode = new javax.swing.JButton();
+        copyToClipboard = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         outText = new javax.swing.JTextPane();
@@ -788,6 +798,13 @@ public final class decoderTopComponent extends TopComponent {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(copyToClipboard, org.openide.util.NbBundle.getMessage(decoderTopComponent.class, "decoderTopComponent.copyToClipboard.text")); // NOI18N
+        copyToClipboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copyToClipboardActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -804,6 +821,10 @@ public final class decoderTopComponent extends TopComponent {
                     .addComponent(hexin, javax.swing.GroupLayout.DEFAULT_SIZE, 809, Short.MAX_VALUE)
                     .addComponent(base64in))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(copyToClipboard)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -816,6 +837,8 @@ public final class decoderTopComponent extends TopComponent {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(hexin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(hexDecode))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(copyToClipboard)
                 .addContainerGap(8, Short.MAX_VALUE))
         );
 
@@ -829,14 +852,14 @@ public final class decoderTopComponent extends TopComponent {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1009, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -882,9 +905,18 @@ public final class decoderTopComponent extends TopComponent {
 
         decode35();
     }//GEN-LAST:event_base64DecodeActionPerformed
+
+    private void copyToClipboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyToClipboardActionPerformed
+
+        StringSelection stringSelection = new StringSelection(outText.getText());
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents( stringSelection, null );
+    }//GEN-LAST:event_copyToClipboardActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton base64Decode;
     private javax.swing.JTextField base64in;
+    private javax.swing.JButton copyToClipboard;
     private javax.swing.JButton hexDecode;
     private javax.swing.JTextField hexin;
     private javax.swing.JPanel jPanel1;
