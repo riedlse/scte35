@@ -1,3 +1,5 @@
 /decoder/build/
 /decoder/nbproject/private/
 /dist/
+/SCTE35base/build/
+/commons-codec/build/

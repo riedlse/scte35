@@ -1,7 +1,0 @@
-home=1365357759000
-cluster=1366059379000
-platform=1365357759000
-user=1366059379000
-crc=7
-locale=en_US
-branding=scte35
