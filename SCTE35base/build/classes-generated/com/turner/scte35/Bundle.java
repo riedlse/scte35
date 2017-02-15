@@ -23,5 +23,5 @@ class Bundle {
     static String HINT_scte35TopComponent() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "HINT_scte35TopComponent");
     }
-    private void Bundle() {}
+    private Bundle() {}
 }
