@@ -387,6 +387,11 @@ public final class decoderTopComponent extends TopComponent {
                 ot += "Time Signal\n";
                 timeSignal.tssp.timeSpecifiedFlag = (b64[bufptr] & 0x080) >> 7;
                 if (timeSignal.tssp.timeSpecifiedFlag != 0) {
+                    if (spliceInfoSection.spliceCommandLength != 6) {
+                        String ptemp = String.format("\n!!!!\n Time Signal with time length != 6 %x\n", spliceInfoSection.spliceCommandLength); 
+                        outText.setText(ot + ptemp);
+                        return;
+                    }
                     // time specified
                     l1 = b64[bufptr] & 0x01;
                     bufptr++;
@@ -400,7 +405,11 @@ public final class decoderTopComponent extends TopComponent {
                     timeSignal.tssp.ptsTime = (l1 << 32) + (l2 << 24) + (l3 << 16) + (l4 << 8) + l5;
                     ot += String.format("Time = 0x%09x\n", timeSignal.tssp.ptsTime);
                 } else {
-                    System.out.printf("No time 0x%x\n", timeSignal.tssp.timeSpecifiedFlag);  
+                    if (spliceInfoSection.spliceCommandLength != 2) {
+                        String ptemp = String.format("\n!!!!\n Time Signal no time length != 2 %x\n", spliceInfoSection.spliceCommandLength); 
+                        outText.setText(ot + ptemp);
+                        return;
+                    }
                 }
                 bufptr++;
                 break;
@@ -419,8 +428,8 @@ public final class decoderTopComponent extends TopComponent {
         if (spliceInfoSection.spliceCommandLength != 0x0fff) { // legacy check
             if (bufptr != (spliceInfoSection.spliceCommandLength + 13)) {
                 ot += "ERROR decoded command length " + bufptr + " not equal to specified command length " + (13 + spliceInfoSection.spliceCommandLength) + "\n";
-                //Some kind of error, or unknown command
-                //bufptr = spliceInfoSection.spliceCommandLength + 14;
+                outText.setText(ot);
+                return;
             }
         }
 
@@ -430,15 +439,25 @@ public final class decoderTopComponent extends TopComponent {
         bufptr++;
         spliceInfoSection.descriptorLoopLength = (i1 << 8) + i2;
         ot += "Descriptor Loop Length = " + spliceInfoSection.descriptorLoopLength + "\n";
-        System.out.println(ot);
+        //System.out.println(ot);
         desptr = bufptr;
+
+        if (b64.length < (bufptr + spliceInfoSection.descriptorLoopLength + 4)) {
+            ot += "\nERROR buffer length " + b64.length + " less then descriptor loop length " + (bufptr + spliceInfoSection.descriptorLoopLength + 4) + "\n";
+            outText.setText(ot);
+            return;
+        }
 
         if (spliceInfoSection.descriptorLoopLength > 0) {
             while ((bufptr - desptr) < spliceInfoSection.descriptorLoopLength) {
-        System.out.println(ot);
                 int tag = b64[bufptr] & 0x00ff;
                 bufptr++;
                 int len = b64[bufptr] & 0x00ff;
+                if (b64.length < (bufptr + len + 4)) {
+                    ot += "\nERROR buffer length " + b64.length + " less then descriptor " + tag + " length " + (bufptr + len + 4) + "\n";
+                    outText.setText(ot);
+                    return;
+                }
                 bufptr++;
                 l1 = b64[bufptr] & 0x00ff;
                 bufptr++;

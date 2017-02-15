@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="com.turner.scte35">
-    <module_version install_time="1487166383873" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1487185012664" last="true" origin="installer" specification_version="1.0">
         <file crc="2643904315" name="config/Modules/com-turner-scte35.xml"/>
-        <file crc="3725046431" name="modules/com-turner-scte35.jar"/>
+        <file crc="3207030314" name="modules/com-turner-scte35.jar"/>
     </module_version>
 </module>

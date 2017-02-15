@@ -2,42 +2,6 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
                             "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <folder name="xml">
-        <folder name="entities">
-            <folder name="com_turner_scte35">
-                <file name="scte35" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
-                    <!--com.turner.scte35.scte35TopComponent-->
-                    <attr name="hint.originalPublicID" stringvalue="-//com.turner.scte35//scte35//EN"/>
-                </file>
-            </folder>
-        </folder>
-        <folder name="memory">
-            <folder name="com">
-                <folder name="turner">
-                    <folder name="scte35">
-                        <file name="scte35TopComponent">
-                            <!--com.turner.scte35.scte35TopComponent-->
-                            <attr name="settings.providerPath" stringvalue="xml/lookups//com_turner_scte35/scte35.instance"/>
-                        </file>
-                    </folder>
-                </folder>
-            </folder>
-        </folder>
-        <folder name="lookups">
-            <folder name="com_turner_scte35">
-                <file name="scte35.instance">
-                    <!--com.turner.scte35.scte35TopComponent-->
-                    <attr
-                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
-                    <attr
-                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
-                    <attr name="settings.instanceClass" stringvalue="com.turner.scte35.scte35TopComponent"/>
-                    <attr name="settings.instanceOf" stringvalue="com.turner.scte35.scte35TopComponent"/>
-                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
-                </file>
-            </folder>
-        </folder>
-    </folder>
     <folder name="Menu">
         <folder name="Window">
             <file name="com-turner-scte35-scte35TopComponent.shadow">
@@ -80,6 +44,42 @@
                 <attr
                     bundlevalue="com.turner.scte35.Bundle#CTL_scte35Action" name="displayName"/>
             </file>
+        </folder>
+    </folder>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="com_turner_scte35">
+                <file name="scte35" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.turner.scte35.scte35TopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.turner.scte35//scte35//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="com">
+                <folder name="turner">
+                    <folder name="scte35">
+                        <file name="scte35TopComponent">
+                            <!--com.turner.scte35.scte35TopComponent-->
+                            <attr name="settings.providerPath" stringvalue="xml/lookups//com_turner_scte35/scte35.instance"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="com_turner_scte35">
+                <file name="scte35.instance">
+                    <!--com.turner.scte35.scte35TopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.turner.scte35.scte35TopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.turner.scte35.scte35TopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
         </folder>
     </folder>
 </filesystem>
