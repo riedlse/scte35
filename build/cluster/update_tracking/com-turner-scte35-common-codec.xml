@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="com.turner.scte35.common.codec">
-    <module_version install_time="1487185056508" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1528983477421" last="true" origin="installer" specification_version="1.0">
         <file crc="3570269339" name="config/Modules/com-turner-scte35-common-codec.xml"/>
-        <file crc="225955851" name="modules/com-turner-scte35-common-codec.jar"/>
+        <file crc="1226779215" name="modules/com-turner-scte35-common-codec.jar"/>
         <file crc="3196282351" name="modules/ext/commons-codec-1.7.jar"/>
     </module_version>
 </module>

@@ -387,8 +387,8 @@ public final class decoderTopComponent extends TopComponent {
                 ot += "Time Signal\n";
                 timeSignal.tssp.timeSpecifiedFlag = (b64[bufptr] & 0x080) >> 7;
                 if (timeSignal.tssp.timeSpecifiedFlag != 0) {
-                    if (spliceInfoSection.spliceCommandLength != 6) {
-                        String ptemp = String.format("\n!!!!\n Time Signal with time length != 6 %x\n", spliceInfoSection.spliceCommandLength); 
+                    if (spliceInfoSection.spliceCommandLength != 5) {
+                        String ptemp = String.format("\n!!!!\n Time Signal with time length != 5 %x\n", spliceInfoSection.spliceCommandLength); 
                         outText.setText(ot + ptemp);
                         return;
                     }
@@ -405,8 +405,8 @@ public final class decoderTopComponent extends TopComponent {
                     timeSignal.tssp.ptsTime = (l1 << 32) + (l2 << 24) + (l3 << 16) + (l4 << 8) + l5;
                     ot += String.format("Time = 0x%09x\n", timeSignal.tssp.ptsTime);
                 } else {
-                    if (spliceInfoSection.spliceCommandLength != 2) {
-                        String ptemp = String.format("\n!!!!\n Time Signal no time length != 2 %x\n", spliceInfoSection.spliceCommandLength); 
+                    if (spliceInfoSection.spliceCommandLength != 1) {
+                        String ptemp = String.format("\n!!!!\n Time Signal no time length != 1 %x\n", spliceInfoSection.spliceCommandLength); 
                         outText.setText(ot + ptemp);
                         return;
                     }
@@ -426,7 +426,7 @@ public final class decoderTopComponent extends TopComponent {
         }
 
         if (spliceInfoSection.spliceCommandLength != 0x0fff) { // legacy check
-            if (bufptr != (spliceInfoSection.spliceCommandLength + 13)) {
+            if (bufptr != (spliceInfoSection.spliceCommandLength + 14)) {
                 ot += "ERROR decoded command length " + bufptr + " not equal to specified command length " + (13 + spliceInfoSection.spliceCommandLength) + "\n";
                 outText.setText(ot);
                 return;
@@ -441,12 +441,12 @@ public final class decoderTopComponent extends TopComponent {
         ot += "Descriptor Loop Length = " + spliceInfoSection.descriptorLoopLength + "\n";
         //System.out.println(ot);
         desptr = bufptr;
-
+        /*
         if (b64.length < (bufptr + spliceInfoSection.descriptorLoopLength + 4)) {
             ot += "\nERROR buffer length " + b64.length + " less then descriptor loop length " + (bufptr + spliceInfoSection.descriptorLoopLength + 4) + "\n";
             outText.setText(ot);
             return;
-        }
+        }*/
 
         if (spliceInfoSection.descriptorLoopLength > 0) {
             while ((bufptr - desptr) < spliceInfoSection.descriptorLoopLength) {
