@@ -7,12 +7,14 @@ package com.turner.decoder;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import org.apache.commons.codec.DecoderException;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
-import javax.xml.bind.DatatypeConverter;
+import org.apache.commons.codec.binary.Hex;
+import org.openide.util.Exceptions;
 
 /**
  * Top component which displays something.
@@ -921,9 +923,13 @@ public final class decoderTopComponent extends TopComponent {
     }//GEN-LAST:event_base64inActionPerformed
 
     private void hexDecodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexDecodeActionPerformed
-        b64 = DatatypeConverter.parseHexBinary(hexin.getText());
-        base64in.setText(Base64.encodeToString(b64, false));
-        decode35();
+        try {
+            b64 = Hex.decodeHex(hexin.getText().toCharArray());
+            base64in.setText(Base64.encodeToString(b64, false));
+            decode35();
+        } catch (DecoderException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }//GEN-LAST:event_hexDecodeActionPerformed
 
     private void base64DecodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_base64DecodeActionPerformed

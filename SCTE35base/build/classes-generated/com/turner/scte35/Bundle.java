@@ -1,6 +1,5 @@
 package com.turner.scte35;
 /** Localizable strings for {@link com.turner.scte35}. */
-@javax.annotation.Generated(value="org.netbeans.modules.openide.util.NbBundleProcessor")
 class Bundle {
     /**
      * @return <i>scte35</i>

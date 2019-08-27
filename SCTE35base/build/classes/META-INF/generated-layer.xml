@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
-                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Menu">
         <folder name="Window">
@@ -13,23 +11,27 @@
     <folder name="Windows2">
         <folder name="Components">
             <file name="scte35TopComponent.settings">
-                <!--com.turner.scte35.scte35TopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+                <!--com.turner.scte35.scte35TopComponent-->
+                <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
 <settings version="1.0">
   <instance class="com.turner.scte35.scte35TopComponent"/>
 </settings>
-]]></file>
+]]>
+            </file>
         </folder>
         <folder name="Modes">
             <folder name="editor">
                 <file name="scte35TopComponent.wstcref">
-                    <!--com.turner.scte35.scte35TopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+                    <!--com.turner.scte35.scte35TopComponent-->
+                    <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
 <tc-ref version="2.0">
   <tc-id id="scte35TopComponent"/>
   <state opened="true"/>
 </tc-ref>
-]]></file>
+]]>
+                </file>
             </folder>
         </folder>
     </folder>
@@ -37,12 +39,10 @@
         <folder name="Window">
             <file name="com-turner-scte35-scte35TopComponent.instance">
                 <!--com.turner.scte35.scte35TopComponent-->
-                <attr
-                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
                 <attr name="component" newvalue="com.turner.scte35.scte35TopComponent"/>
                 <attr name="preferredID" stringvalue="scte35TopComponent"/>
-                <attr
-                    bundlevalue="com.turner.scte35.Bundle#CTL_scte35Action" name="displayName"/>
+                <attr bundlevalue="com.turner.scte35.Bundle#CTL_scte35Action" name="displayName"/>
             </file>
         </folder>
     </folder>
@@ -71,10 +71,8 @@
             <folder name="com_turner_scte35">
                 <file name="scte35.instance">
                     <!--com.turner.scte35.scte35TopComponent-->
-                    <attr
-                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
-                    <attr
-                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
                     <attr name="settings.instanceClass" stringvalue="com.turner.scte35.scte35TopComponent"/>
                     <attr name="settings.instanceOf" stringvalue="com.turner.scte35.scte35TopComponent"/>
                     <attr boolvalue="true" name="xmlproperties.preventStoring"/>
